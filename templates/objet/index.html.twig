@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Objets{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Objets</h1>
+        <a href="{{ path('objet_new') }}" class="btn btn-dark">+ Nouvel objet</a>
+    </div>
+
+    <div class="table-responsive card card-entity p-3">
+        <table class="table align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Époque</th>
+                <th>Origine</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for objet in objets %}
+                <tr>
+                    <td>{{ objet.nom }}</td>
+                    <td>{{ objet.categorie ? objet.categorie.nomCategorie : '—' }}</td>
+                    <td>{{ objet.epoque ?: '—' }}</td>
+                    <td>{{ objet.origine ?: '—' }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('objet_show', {idObjet: objet.idObjet}) }}" class="btn btn-sm btn-outline-dark">Voir</a>
+                        <a href="{{ path('objet_edit', {idObjet: objet.idObjet}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        Aucun objet enregistré.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la catégorie{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3">Modifier la catégorie</h1>
+
+    {{ include('categorie/_form.html.twig', {button_label: 'Mettre à jour'}) }}
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <a href="{{ path('categorie_show', {idCategorie: categorie.idCategorie}) }}" class="btn btn-link">← Retour au détail</a>
+        {{ include('categorie/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Catégories</h1>
+        <a href="{{ path('categorie_new') }}" class="btn btn-dark">+ Nouvelle catégorie</a>
+    </div>
+
+    <div class="table-responsive card card-entity p-3">
+        <table class="table align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Objets</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for categorie in categories %}
+                <tr>
+                    <td>{{ categorie.nomCategorie }}</td>
+                    <td>{{ categorie.objets|length }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('categorie_show', {idCategorie: categorie.idCategorie}) }}" class="btn btn-sm btn-outline-dark">Voir</a>
+                        <a href="{{ path('categorie_edit', {idCategorie: categorie.idCategorie}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">
+                        Aucune catégorie pour le moment.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

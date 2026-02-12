@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Médias{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Médias</h1>
+        <a href="{{ path('media_new') }}" class="btn btn-dark">+ Nouveau média</a>
+    </div>
+
+    <div class="table-responsive card card-entity p-3">
+        <table class="table align-middle mb-0">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Objet</th>
+                <th>Lien</th>
+                <th class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for media in medias %}
+                <tr>
+                    <td class="text-uppercase small">{{ media.typeMedia }}</td>
+                    <td>{{ media.objet ? media.objet.nom : '—' }}</td>
+                    <td class="text-truncate" style="max-width: 280px;">
+                        <a href="{{ media.lienFichier }}" target="_blank">{{ media.lienFichier }}</a>
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ path('media_show', {idMedia: media.idMedia}) }}" class="btn btn-sm btn-outline-dark">Voir</a>
+                        <a href="{{ path('media_edit', {idMedia: media.idMedia}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        Aucun média enregistré.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

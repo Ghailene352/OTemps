@@ -1,0 +1,7 @@
+<form method="post"
+      action="{{ path('objet_delete', {idObjet: objet.idObjet}) }}"
+      onsubmit="return confirm('Supprimer définitivement cet objet ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete_objet_' ~ objet.idObjet) }}">
+    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+</form>
+

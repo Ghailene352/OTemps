@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ objet.nom }}{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">{{ objet.nom }}</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ path('objet_edit', {idObjet: objet.idObjet}) }}" class="btn btn-outline-secondary btn-sm">Modifier</a>
+            {{ include('objet/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <p class="mb-1">
+        <strong>Catégorie :</strong>
+        {{ objet.categorie ? objet.categorie.nomCategorie : '—' }}
+    </p>
+    <p class="mb-1">
+        {% if objet.epoque %}<strong>Époque :</strong> {{ objet.epoque }}{% endif %}
+        {% if objet.origine %}<br><strong>Origine :</strong> {{ objet.origine }}{% endif %}
+        {% if objet.materiaux %}<br><strong>Matériaux :</strong> {{ objet.materiaux }}{% endif %}
+    </p>
+
+    <p class="mt-3">
+        <strong>Histoire :</strong><br>
+        {{ objet.descriptionHistorique ?: 'Aucune description historique renseignée.' }}
+    </p>
+
+    <hr>
+    <h2 class="h5 mt-3">Médias associés</h2>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <p class="mb-0">{{ objet.medias|length }} média(s)</p>
+        <a href="{{ path('media_new') }}" class="btn btn-sm btn-dark">+ Ajouter un média</a>
+    </div>
+
+    <div class="row g-3">
+        {% for media in objet.medias %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-entity h-100">
+                    <div class="card-body">
+                        <span class="badge text-bg-secondary text-uppercase mb-2">{{ media.typeMedia }}</span>
+                        <p class="small text-break">{{ media.lienFichier }}</p>
+                        <a href="{{ media.lienFichier }}" target="_blank" class="btn btn-sm btn-outline-dark">
+                            Ouvrir le média
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Aucun média pour cet objet.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ path('objet_index') }}" class="btn btn-link mt-3">← Retour à tous les objets</a>
+{% endblock %}
+

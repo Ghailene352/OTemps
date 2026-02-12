@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel objet{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3">Nouvel objet</h1>
+
+    {{ include('objet/_form.html.twig', {button_label: 'Enregistrer'}) }}
+
+    <a href="{{ path('objet_index') }}" class="btn btn-link mt-3">← Retour à la liste</a>
+{% endblock %}
+

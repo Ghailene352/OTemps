@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau média{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3">Nouveau média</h1>
+
+    {{ include('media/_form.html.twig', {button_label: 'Enregistrer'}) }}
+
+    <a href="{{ path('media_index') }}" class="btn btn-link mt-3">← Retour à la liste</a>
+{% endblock %}
+

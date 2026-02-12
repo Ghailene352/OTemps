@@ -1,0 +1,14 @@
+{{ form_start(form, {'attr': {'class': 'card card-entity p-3'}}) }}
+    <div class="row g-3">
+        <div class="col-md-6">
+            {{ form_row(form.nomCategorie) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.descriptionType) }}
+        </div>
+    </div>
+    <div class="mt-3 text-end">
+        <button class="btn btn-dark">{{ button_label|default('Enregistrer') }}</button>
+    </div>
+{{ form_end(form) }}
+

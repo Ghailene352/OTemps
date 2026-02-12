@@ -1,17 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+        <title>{% block title %}Musée des traditions{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🏛️</text></svg>">
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <header class="header">
+            <div class="container header-content">
+                <div class="header-title">
+                    <h1><a href="{{ path('app_dashboard') }}">Musée des traditions</a></h1>
+                    <p>Patrimoine culturel</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <div class="sidebar-header">
+                        <h2>Navigation</h2>
+                        <p>Gérez vos collections</p>
+                    </div>
+                    <div class="nav-items">
+                        <a href="{{ path('app_dashboard') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'active' : '' }}">
+                            Tableau de bord
+                        </a>
+                        <a href="{{ path('categorie_index') }}" class="nav-item {{ 'categorie' in app.request.attributes.get('_route') ? 'active' : '' }}">
+                            Catégories
+                        </a>
+                        <a href="{{ path('objet_index') }}" class="nav-item {{ 'objet' in app.request.attributes.get('_route') ? 'active' : '' }}">
+                            Objets
+                        </a>
+                        <a href="{{ path('media_index') }}" class="nav-item {{ 'media' in app.request.attributes.get('_route') ? 'active' : '' }}">
+                            Médias
+                        </a>
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <div class="content-container">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert-template alert-{{ label == 'success' ? 'success' : (label == 'error' ? 'danger' : 'info') }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+                </div>
+
+                <footer class="footer">
+                    <div class="footer-content">
+                        <p>Musée des traditions</p>
+                        <p>Gestion du patrimoine culturel</p>
+                    </div>
+                </footer>
+            </main>
+        </div>
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
     </body>
 </html>

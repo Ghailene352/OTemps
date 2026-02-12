@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card card-entity text-bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Catégories</h5>
+                    <p class="card-text display-6">{{ categories_count }}</p>
+                    <a href="{{ path('categorie_index') }}" class="btn btn-sm btn-dark">Gérer les catégories</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-entity text-bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Objets</h5>
+                    <p class="card-text display-6">{{ objets_count }}</p>
+                    <a href="{{ path('objet_index') }}" class="btn btn-sm btn-dark">Gérer les objets</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-entity text-bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Médias</h5>
+                    <p class="card-text display-6">{{ medias_count }}</p>
+                    <a href="{{ path('media_index') }}" class="btn btn-sm btn-dark">Gérer les médias</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h4 mb-3">Vue d’ensemble des catégories</h2>
+
+    <div class="row g-3">
+        {% for categorie in categories %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-entity h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ categorie.nomCategorie }}</h5>
+                        <p class="card-text small flex-grow-1">
+                            {{ categorie.descriptionType ?: 'Aucune description pour le moment.' }}
+                        </p>
+                        <p class="card-text">
+                            <strong>{{ categorie.objets|length }}</strong> objet(s)
+                        </p>
+                        <div class="mt-2">
+                            <a href="{{ path('categorie_show', {idCategorie: categorie.idCategorie}) }}" class="btn btn-sm btn-outline-dark">Voir le détail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Aucune catégorie enregistrée pour l’instant.
+                    <a href="{{ path('categorie_new') }}" class="alert-link">Commencez par en créer une.</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
