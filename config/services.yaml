@@ -9,6 +9,13 @@
 parameters:
 
 services:
+# config/services.yaml
+
+services:
+    App\Controller\Admin\UserController:
+        autowire: true
+        autoconfigure: true
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
