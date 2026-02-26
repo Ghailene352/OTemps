@@ -58,6 +58,7 @@ class ObjetController extends AbstractController
             'objet' => $objet,
         ]);
     }
+    
 
     #[Route('/{idObjet}/modifier', name: 'objet_edit', methods: ['GET', 'POST'])]
     public function edit(int $idObjet, Request $request, ObjetRepository $objetRepository, EntityManagerInterface $em): Response
@@ -101,5 +102,28 @@ class ObjetController extends AbstractController
 
         return $this->redirectToRoute('objet_index');
     }
+    #[Route('/front', name: 'objet_index1')] // Si tu as renommé la route ici
+    public function index1(ObjetRepository $objetRepository): Response
+    {
+        return $this->render('front/home.html.twig', [
+            'objets' => $objetRepository->findAll(), // C'est ce NOM que Twig cherche
+            
+        ]);
+    }
+//shhow of details
+    #[Route('/objet/{idObjet}', name: 'objet_showObject', methods: ['GET'])]
+    public function showObject(int $idObjet, ObjetRepository $objetRepository): Response
+    {
+        $objet = $objetRepository->find($idObjet);
+
+        if (!$objet) {
+            throw $this->createNotFoundException('Objet introuvable');
+        }
+
+        return $this->render('front/table/show.html.twig', [
+            'objet' => $objet,
+        ]);
+    }
 }
 
+    

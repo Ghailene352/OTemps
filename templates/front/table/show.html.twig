@@ -1,0 +1,176 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}{{ objet.nom }}{% endblock %}
+
+{% block body %}
+<style>
+    .fiche-art {
+        max-width: 900px;
+        margin: 50px auto;
+        background: white;
+        padding: 60px;
+        border-radius: 4px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.05);
+        border-top: 10px solid #d35400;
+    }
+
+    /* --- STYLE POUR LA GRANDE IMAGE --- */
+    .main-image-container {
+        width: 100%;
+        max-height: 500px;
+        margin-bottom: 40px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fdfdfd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #eee;
+    }
+    .main-image-container img {
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain; /* Garde l'œuvre intacte sans la couper */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .description-box {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        color: #333;
+        margin: 40px 0;
+        text-align: justify;
+    }
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        background: #fdfaf8;
+        padding: 30px;
+        border: 1px solid #eee;
+    }
+    .meta-item b { color: #d35400; text-transform: uppercase; font-size: 0.8rem; display: block; }
+    .meta-item span { font-size: 1.1rem; font-weight: bold; }
+
+    .btn-pdf {
+        background: #2c3e50;
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 2px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 40px;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #d35400;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    @media print {
+        .no-print, nav, footer, .btn-pdf, .back-link { display: none !important; }
+        body { background: white; }
+        .fiche-art { box-shadow: none; border: none; width: 100%; margin: 0; padding: 0; }
+        .main-image-container { border: none; }
+    }
+</style>
+<style>
+    /* ... tes styles précédents (fiche-art, etc.) ... */
+
+    /* --- OPTIMISATION STRRICTE POUR L'IMPRESSION PDF --- */
+    @media print {
+        /* 1. On cache absolument tout le surplus */
+        nav, 
+        footer, 
+        .no-print, 
+        .btn-pdf, 
+        .back-link,
+        .navbar,
+        #footer-container, /* Ajuste selon l'ID réel de ton footer s'il est différent */
+        header { 
+            display: none !important; 
+            height: 0 !important;
+            visibility: hidden !important;
+        }
+
+        /* 2. On réinitialise le body pour le PDF */
+        body { 
+            background: white !important; 
+            margin: 0 !important; 
+            padding: 0 !important; 
+        }
+
+        /* 3. On force la fiche à prendre toute la page proprement */
+        .fiche-art { 
+            box-shadow: none !important; 
+            border: none !important; 
+            width: 100% !important; 
+            max-width: 100% !important;
+            margin: 0 !important; 
+            padding: 20px !important; 
+        }
+
+        /* 4. On s'assure que l'image ne dépasse pas la page */
+        .main-image-container img {
+            max-height: 400px !important; /* Un peu plus petit pour le PDF */
+        }
+
+        /* 5. Supprimer les marges par défaut du navigateur (date, titre, URL) */
+        @page {
+            margin: 1cm;
+        }
+    }
+</style>
+<div class="container">
+    <div class="fiche-art">
+        
+
+        <div class="text-center">
+            <h1 class="display-3 fw-bold">{{ objet.nom }}</h1>
+            <hr style="width: 100px; margin: 20px auto; border-top: 3px solid #d35400;">
+        </div>
+
+        <div class="main-image-container">
+            {% if objet.medias is not empty %}
+                {% set media = objet.medias[0] %}
+                {% if media.lienFichier starts with 'http' %}
+                    <img src="{{ media.lienFichier }}" alt="{{ objet.nom }}">
+                {% else %}
+                    <img src="{{ asset('uploads/medias/' ~ media.lienFichier) }}" alt="{{ objet.nom }}">
+                {% endif %}
+            {% else %}
+                <div class="p-5 text-muted">Aucun média disponible pour cette œuvre</div>
+            {% endif %}
+        </div>
+
+        <div class="description-box">
+            <h4 class="fw-bold">Historique de l'objet</h4>
+            <p>{{ objet.descriptionHistorique }}</p>
+        </div>
+
+        <div class="metadata-grid">
+            <div class="meta-item">
+                <b>Époque</b>
+                <span>{{ objet.epoque ?? 'Non spécifiée' }}</span>
+            </div>
+            <div class="meta-item border-start ps-4">
+                <b>Origine</b>
+                <span>{{ objet.origine ?? 'Non spécifiée' }}</span>
+            </div>
+            <div class="meta-item border-start ps-4">
+                <b>Matériaux</b>
+                <span>{{ objet.materiaux ?? 'Non spécifiés' }}</span>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button onclick="window.print()" class="btn-pdf">
+                GÉNÉRER LA FICHE PATRIMOINE (PDF)
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

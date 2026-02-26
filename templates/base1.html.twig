@@ -19,28 +19,7 @@
         </header>
 
         <div class="main-layout">
-            <aside class="sidebar">
-                <nav class="sidebar-nav">
-                    <div class="sidebar-header">
-                        <h2>Navigation</h2>
-                        <p>Gérez vos collections</p>
-                    </div>
-                    <div class="nav-items">
-                        <a href="{{ path('app_dashboard') }}" class="nav-item {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'active' : '' }}">
-                            Tableau de bord
-                        </a>
-                        <a href="{{ path('categorie_index') }}" class="nav-item {{ 'categorie' in app.request.attributes.get('_route') ? 'active' : '' }}">
-                            Catégories
-                        </a>
-                        <a href="{{ path('objet_index') }}" class="nav-item {{ 'objet' in app.request.attributes.get('_route') ? 'active' : '' }}">
-                            Objets
-                        </a>
-                        <a href="{{ path('media_index') }}" class="nav-item {{ 'media' in app.request.attributes.get('_route') ? 'active' : '' }}">
-                            Médias
-                        </a>
-                    </div>
-                </nav>
-            </aside>
+            
 
             <main class="main-content">
                 <div class="content-container">
