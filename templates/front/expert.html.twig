@@ -1,0 +1,316 @@
+{% extends 'base1.html.twig' %}
+
+{% block title %}Expert Virtuel en Artisanat{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --gold: #c5a059;
+        --dark: #2c2c2c;
+        --light: #f8f9fa;
+        --wall: #fdfbfb;
+    }
+
+    .expert-container {
+        background: linear-gradient(to bottom, var(--wall) 0%, var(--light) 100%);
+        min-height: 100vh;
+        padding: 60px 20px;
+    }
+
+    .expert-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(44, 44, 44, 0.1);
+        border: 1px solid #efefef;
+        overflow: hidden;
+    }
+
+    .expert-header {
+        background: linear-gradient(135deg, var(--dark) 0%, #444 100%);
+        color: var(--gold);
+        padding: 50px 20px;
+        text-align: center;
+        border-bottom: 3px solid var(--gold);
+    }
+
+    .expert-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 2px;
+    }
+
+    .expert-header p {
+        font-size: 1.1rem;
+        opacity: 0.85;
+        font-style: italic;
+    }
+
+    .upload-zone {
+        border: 3px dashed var(--gold);
+        border-radius: 8px;
+        padding: 50px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(to bottom, #fdfbfb 0%, #f8f9fa 100%);
+    }
+
+    .upload-zone:hover {
+        border-color: var(--dark);
+        background: #f0f0f0;
+        transform: scale(1.02);
+        box-shadow: 0 10px 30px rgba(197, 160, 89, 0.2);
+    }
+
+    .upload-zone.drag-over {
+        border-color: var(--dark);
+        background: #e8e8e8;
+        box-shadow: 0 15px 40px rgba(44, 44, 44, 0.15);
+    }
+
+    .upload-icon {
+        font-size: 4rem;
+        margin-bottom: 15px;
+    }
+
+    .upload-zone h4 {
+        color: var(--dark);
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+    }
+
+    .upload-zone p {
+        color: #999;
+    }
+
+    #preview {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(44, 44, 44, 0.15);
+        border: 8px solid white;
+        outline: 1px solid #ddd;
+    }
+
+    #analyzeBtn {
+        background: linear-gradient(135deg, var(--gold) 0%, #b8963f 100%);
+        border: none;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 4px;
+        color: white;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    #analyzeBtn:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(197, 160, 89, 0.3);
+        background: linear-gradient(135deg, #b8963f 0%, var(--gold) 100%);
+    }
+
+    #analyzeBtn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .analysis-card {
+        border: none;
+        border-left: 5px solid var(--gold);
+        margin-top: 30px;
+        box-shadow: 0 10px 30px rgba(44, 44, 44, 0.1);
+    }
+
+    .analysis-header {
+        background: linear-gradient(135deg, var(--dark) 0%, #444 100%);
+        color: var(--gold);
+        padding: 20px;
+        border-bottom: 1px solid var(--gold);
+    }
+
+    .analysis-header h5 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px;
+    }
+
+    .analysis-body {
+        padding: 30px;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: #333;
+        background: white;
+    }
+
+    .spinner-container {
+        text-align: center;
+        padding: 40px;
+    }
+
+    .spinner-border {
+        width: 50px;
+        height: 50px;
+        border-width: 5px;
+        border-color: var(--gold) !important;
+        border-right-color: transparent !important;
+    }
+
+    .loading-text {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        color: var(--dark);
+        font-weight: 500;
+        font-style: italic;
+    }
+
+    .error-message {
+        background: #fff3cd;
+        border-left: 5px solid var(--gold);
+        color: #856404;
+        padding: 20px;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+
+    .content-wrapper {
+        padding: 40px;
+    }
+</style>
+
+<div class="expert-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="expert-card">
+                    <!-- En-tête -->
+                    <div class="expert-header">
+                        <h1>🖼️ Expert Virtuel</h1>
+                        <p>Analysez vos objets artisanaux avec l'IA</p>
+                    </div>
+
+                    <!-- Contenu -->
+                    <div class="content-wrapper">
+                        <!-- Zone de téléchargement -->
+                        <div class="upload-zone" id="uploadZone">
+                            <input type="file" id="imageInput" accept="image/*" style="display:none;">
+                            
+                            <div class="upload-icon">📸</div>
+                            <h4>Glissez votre image ici</h4>
+                            <p style="margin-bottom: 5px;">ou cliquez pour sélectionner</p>
+                            <small style="color: #bbb;">PNG, JPG, WebP (max 5MB)</small>
+                        </div>
+
+                        <!-- Aperçu image -->
+                        <div id="previewContainer" style="display:none; margin: 30px 0;">
+                            <img id="preview" src="" alt="Aperçu">
+                        </div>
+
+                        <!-- Bouton analyse -->
+                        <button id="analyzeBtn" class="btn w-100" style="display:none; margin-top: 20px;">
+                            ✨ Analyser avec l'Expert IA
+                        </button>
+
+                        <!-- Zone de résultat -->
+                        <div id="resultContainer" style="display:none;">
+                            <div class="analysis-card card">
+                                <div class="analysis-header">
+                                    <h5>🎭 Analyse Détaillée</h5>
+                                </div>
+                                <div class="analysis-body">
+                                    <div id="analysisResult"></div>
+                                    <div id="loadingSpinner" style="display:none;" class="spinner-container">
+                                        <div class="spinner-border" role="status"></div>
+                                        <p class="loading-text">L'expert examine votre objet...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const uploadZone = document.getElementById('uploadZone');
+const imageInput = document.getElementById('imageInput');
+const previewContainer = document.getElementById('previewContainer');
+const preview = document.getElementById('preview');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const resultContainer = document.getElementById('resultContainer');
+const analysisResult = document.getElementById('analysisResult');
+const loadingSpinner = document.getElementById('loadingSpinner');
+
+uploadZone.addEventListener('click', () => imageInput.click());
+
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+});
+
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('drag-over');
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleImage(e.dataTransfer.files[0]);
+});
+
+imageInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) handleImage(e.target.files[0]);
+});
+
+function handleImage(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        preview.src = e.target.result;
+        previewContainer.style.display = 'block';
+        analyzeBtn.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+analyzeBtn.addEventListener('click', async () => {
+    const file = imageInput.files[0];
+    if (!file) {
+        alert('Veuillez sélectionner une image');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    resultContainer.style.display = 'block';
+    loadingSpinner.style.display = 'block';
+    analysisResult.innerHTML = '';
+    analyzeBtn.disabled = true;
+
+    try {
+        const response = await fetch('{{ path('front_expert_analyze') }}', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            loadingSpinner.style.display = 'none';
+            analysisResult.innerHTML = data.analysis.replace(/\n/g, '<br>');
+        } else {
+            analysisResult.innerHTML = '<div class="error-message">❌ ' + (data.error || 'Erreur lors de l\'analyse') + '</div>';
+        }
+    } catch (e) {
+        analysisResult.innerHTML = '<div class="error-message">❌ Erreur: ' + e.message + '</div>';
+    } finally {
+        analyzeBtn.disabled = false;
+    }
+});
+</script>
+{% endblock %}
