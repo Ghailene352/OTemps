@@ -5,7 +5,7 @@
 {% block body %}
 <h1>Bienvenue !</h1>
 
-<p>Email de l’utilisateur connecté : <b>{{ app.user.email }}</b></p>
+<p>Email de l’utilisateur connecté : <b>{{ email }}</b></p>
 
 <a href="{{ path('app_logout') }}">Se déconnecter</a>
 {% endblock %}

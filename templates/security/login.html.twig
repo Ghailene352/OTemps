@@ -4,58 +4,92 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/form-auth.css') }}">
 {% endblock %}
 
 {% block body %}
-    <div class="auth-container">
+<div class="auth-form">
+    <h1>Connexion</h1>
 
-        <form method="post" class="auth-form">
+    {# Formulaire classique #}
+    <form method="post" action="{{ path('app_login') }}">
+        <div class="form-group">
+            <label>Email :</label>
+            <input type="email" name="_username" required>
+        </div>
+        <div class="form-group">
+            <label>Mot de passe :</label>
+            <input type="password" name="_password" required>
+        </div>
+        <button type="submit" class="auth-btn">Se connecter</button>
+    </form>
 
-            {% if error %}
-                <div class="auth-error">
-                    {{ error.messageKey|trans(error.messageData, 'security') }}
-                </div>
-            {% endif %}
-
-            {% if app.user %}
-                <div class="auth-info">
-                    Connecté en tant que {{ app.user.userIdentifier }},
-                    <a href="{{ logout_path() }}">Déconnexion</a>
-                </div>
-            {% endif %}
-
-            <h1 class="auth-title">Connexion</h1>
-
-            <div class="form-group">
-                <label for="username">Email</label>
-                <input
-                    type="email"
-                    value="{{ last_username }}"
-                    name="_username"
-                    id="username"
-                    required
-                    autofocus
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input
-                    type="password"
-                    name="_password"
-                    id="password"
-                    required
-                >
-            </div>
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-            <button type="submit" class="auth-btn">
-                Se connecter
-            </button>
-
-        </form>
-
+    <div class="auth-footer">
+        <a href="{{ path('app_forgot_password') }}">Mot de passe oublié ?</a>
     </div>
+
+    {# Flash messages #}
+    {% for flash in app.flashes('error') %}
+        <p style="color:red">{{ flash }}</p>
+    {% endfor %}
+    {% for flash in app.flashes('success') %}
+        <p style="color:green">{{ flash }}</p>
+    {% endfor %}
+
+    <hr>
+
+    {# Connexion FaceID #}
+    <h2>Connexion FaceID</h2>
+    <video id="video" width="320" height="240" autoplay style="border-radius:6px; display:block; margin:0 auto 10px;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <button id="captureBtn" class="auth-btn-reset">Se connecter avec FaceID</button>
+</div>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+
+// Demande accès caméra
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => { video.srcObject = stream; })
+.catch(console.error);
+
+// Convertir base64 en Blob
+function dataURLtoBlob(dataURL){
+    const parts = dataURL.split(',');
+    const mime = parts[0].match(/:(.*?);/)[1];
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+    return new Blob([u8arr], {type:mime});
+}
+
+// Capture FaceID et envoi
+document.getElementById('captureBtn').addEventListener('click', async () => {
+    const ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const blob = dataURLtoBlob(canvas.toDataURL('image/png'));
+    const formData = new FormData();
+    formData.append('face_image', blob, 'face.png');
+
+    try {
+        const res = await fetch('{{ path("app_face_login") }}', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if(data.success){
+            alert('FaceID reconnu !');
+            window.location.href = data.redirect;
+        } else {
+            alert(data.message || 'FaceID non reconnu');
+        }
+    } catch(e){
+        console.error(e);
+        alert('Erreur lors de la connexion FaceID.');
+    }
+});
+</script>
 {% endblock %}

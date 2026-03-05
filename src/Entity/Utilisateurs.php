@@ -38,6 +38,10 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     private string $role = 'ROLE_USER';
 
+    // ======= NOUVEAU CHAMP FACE IMAGE =======
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $faceImage = null;
+
     /* ================= GETTERS / SETTERS ================= */
 
     public function getId(): ?int
@@ -113,9 +117,6 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Obligatoire pour Symfony Security
-     */
     public function getRoles(): array
     {
         return [$this->role];
@@ -134,5 +135,18 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // Rien à effacer
+    }
+
+    /* ================= FACE IMAGE ================= */
+
+    public function getFaceImage(): ?string
+    {
+        return $this->faceImage;
+    }
+
+    public function setFaceImage(?string $faceImage): static
+    {
+        $this->faceImage = $faceImage;
+        return $this;
     }
 }

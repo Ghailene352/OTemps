@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Capture de votre visage{% endblock %}
+
+{% block body %}
+
+<h1>Capture de votre visage</h1>
+
+{{ form_start(faceForm) }}
+
+<video id="video" width="320" height="240" autoplay playsinline></video>
+<canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+<button type="button" id="capture">Capturer</button>
+<br><br>
+
+{# Champ caché pour envoyer la photo à Symfony #}
+{{ form_widget(faceForm.photo, {'attr': {'id': faceForm.photo.vars.id, 'type': 'hidden'}}) }}
+
+{{ form_widget(faceForm.save) }}
+
+{{ form_end(faceForm) }}
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureBtn = document.getElementById('capture');
+const photoInput = document.getElementById('{{ faceForm.photo.vars.id }}');
+
+// activer la caméra
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(err => {
+    alert("Impossible d'accéder à la caméra : " + err);
+});
+
+// capture de l'image
+captureBtn.addEventListener('click', () => {
+    const context = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // envoyer l'image au champ hidden
+    photoInput.value = canvas.toDataURL('image/png');
+
+    alert('Photo capturée ! Vous pouvez maintenant valider.');
+});
+</script>
+
+{% endblock %}

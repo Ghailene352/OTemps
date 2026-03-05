@@ -1,10 +1,8 @@
 security:
-    # Hasher pour l'entité Utilisateurs
     password_hashers:
         App\Entity\Utilisateurs:
             algorithm: auto
 
-    # Utilisation de la table Utilisateurs
     providers:
         app_user_provider:
             entity:
@@ -22,16 +20,14 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                enable_csrf: true
+                enable_csrf: false
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
-
+        - { path: ^/face-login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 when@test:
     security:
         password_hashers:

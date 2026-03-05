@@ -1175,3 +1175,32 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.header-title {
+    display: flex;
+    align-items: center;     /* Aligne verticalement au centre */
+    gap: 12px;              /* Espace entre le logo et le texte */
+}
+
+.logo {
+    height: 40px;           /* Hauteur fixe - Ajustez selon besoin */
+    width: auto;           /* Largeur automatique pour garder les proportions */
+    object-fit: contain;   /* Évite la déformation */
+}
+
+.title-group {
+    display: flex;
+    flex-direction: column; /* Met le h1 et p l'un sous l'autre */
+}
+
+/* Optionnel : Ajustement du texte */
+.title-group h1 {
+    margin: 0;             /* Enlève les marges par défaut */
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.title-group p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;           /* Gris plus doux */
+}
