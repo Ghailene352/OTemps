@@ -58,12 +58,10 @@ public function analyzeImage(Request $request): JsonResponse
         $apiKey = $_ENV['GOOGLE_GEMINI_KEY'];
         $imageData = base64_encode(file_get_contents($uploadedFile->getPathname()));
         
-        // URL CORRIGÉE (Vérifie bien le "v1beta" et le modèle)
-  // src/Controller/ExpertController.php
+
 
 $apiKey = trim($_ENV['GOOGLE_GEMINI_KEY']); 
 
-// ON CHANGE 1.5 PAR 2.5 (selon ton retour console)
 $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" . $apiKey;
 
 $response = $this->httpClient->request('POST', $url, [
